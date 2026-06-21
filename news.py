@@ -2,22 +2,26 @@ import streamlit as st
 import feedparser
 from datetime import datetime
 from streamlit_autorefresh import st_autorefresh
+import pytz
 
 # 🌐 Page setup
 st.set_page_config(page_title="News Hub", layout="wide")
 
-# 🔄 AUTO REFRESH (must be top)
+# 🔄 Auto refresh (1 sec)
 st_autorefresh(interval=1000, key="clock")
 
 # 🧠 HEADER
 st.markdown("""
     <h1 style='text-align:center; color:#0b3d91;'>📰 NEWS HUB</h1>
-    <p style='text-align:center; color:gray;'>Live News • Auto Refresh • Clean UI</p>
+    <p style='text-align:center; color:gray;'>Live News • Auto Refresh • IST Time</p>
 """, unsafe_allow_html=True)
 
-# ⏰ LIVE TIME (TOP CENTER)
+# ⏰ IST TIME FIX (IMPORTANT)
+ist = pytz.timezone('Asia/Kolkata')
+now = datetime.now(ist)
+
 st.markdown(
-    f"<h3 style='text-align:center;'>⏰ {datetime.now().strftime('%I:%M:%S %p')}</h3>",
+    f"<h3 style='text-align:center;'>⏰ {now.strftime('%I:%M:%S %p')}</h3>",
     unsafe_allow_html=True
 )
 
@@ -40,7 +44,7 @@ feed = feedparser.parse(categories[choice])
 
 st.markdown(f"## 🔥 {choice} News")
 
-# 🟦 NEWS CARDS UI
+# 🟦 NEWS CARDS
 for entry in feed.entries[:15]:
     st.markdown(f"""
         <div style="
