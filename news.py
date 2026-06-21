@@ -2,24 +2,24 @@ import streamlit as st
 import feedparser
 from datetime import datetime
 from streamlit_autorefresh import st_autorefresh
-st_autorefresh(interval=1000, key="clock")
 
 # 🌐 Page setup
 st.set_page_config(page_title="News Hub", layout="wide")
 
-# 🔄 Auto refresh
-st_autorefresh(interval=60000, key="refresh")
+# 🔄 AUTO REFRESH (must be top)
+st_autorefresh(interval=1000, key="clock")
 
-# 🎨 HEADER STYLE
+# 🧠 HEADER
 st.markdown("""
-    <h1 style='text-align:center; color:#1f4e79;'>📰 NEWS HUB</h1>
-    <p style='text-align:center; color:gray;'>Live Updates | Clean UI | Fast News</p>
+    <h1 style='text-align:center; color:#0b3d91;'>📰 NEWS HUB</h1>
+    <p style='text-align:center; color:gray;'>Live News • Auto Refresh • Clean UI</p>
 """, unsafe_allow_html=True)
 
-# ⏰ TIME
-st.markdown(f"""
-    <h4 style='text-align:center;'>⏰ {datetime.now().strftime("%I:%M:%S %p")}</h4>
-""", unsafe_allow_html=True)
+# ⏰ LIVE TIME (TOP CENTER)
+st.markdown(
+    f"<h3 style='text-align:center;'>⏰ {datetime.now().strftime('%I:%M:%S %p')}</h3>",
+    unsafe_allow_html=True
+)
 
 # 📌 CATEGORIES
 categories = {
@@ -32,31 +32,32 @@ categories = {
     "Entertainment": "https://www.thehindu.com/entertainment/feeder/default.rss"
 }
 
+# 🧭 SIDEBAR
 choice = st.sidebar.radio("📌 Categories", list(categories.keys()))
 
+# 🔗 FEED
 feed = feedparser.parse(categories[choice])
 
 st.markdown(f"## 🔥 {choice} News")
 
-# 🟦 NEWS CARDS (CLEAN + MODERN STYLE)
+# 🟦 NEWS CARDS UI
 for entry in feed.entries[:15]:
     st.markdown(f"""
         <div style="
-            background: linear-gradient(135deg, #f5faff, #e6f2ff);
+            background: #f5faff;
             padding:16px;
             margin-bottom:15px;
             border-radius:14px;
-            box-shadow:0 4px 10px rgba(0,0,0,0.08);
-            border-left:6px solid #1f4e79;
+            border-left:6px solid #0b3d91;
+            box-shadow:0 3px 8px rgba(0,0,0,0.08);
         ">
             <h4 style="color:#0b3d91;">📰 {entry.title}</h4>
             <p style="color:gray; font-size:13px;">
                 📅 {entry.published if hasattr(entry,'published') else ''}
             </p>
-            <a href="{entry.link}" target="_blank" style="
-                text-decoration:none;
-                color:#1f4e79;
-                font-weight:bold;
-            ">👉 Read Full News</a>
+            <a href="{entry.link}" target="_blank"
+               style="color:#0b3d91; font-weight:bold; text-decoration:none;">
+               👉 Read Full News
+            </a>
         </div>
     """, unsafe_allow_html=True)
